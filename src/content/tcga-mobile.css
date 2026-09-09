@@ -702,7 +702,9 @@ html.tcgam.tcgam-sideDrawer .game .left-bar {
   left: 0;
   top: 0;
   height: 100% !important;
-  width: 15vh !important;
+  /* border-box: the camera cutout inset is padding *inside* this width, so add it or the icons get squeezed
+   * into whatever is left (happened with the cutout on the left in one landscape orientation) */
+  width: calc(15vh + env(safe-area-inset-left, 0px)) !important;
   z-index: 100000;
   transform: translateX(-100%);
   transition: transform .18s ease-out;
