@@ -186,7 +186,10 @@
   document.addEventListener("pointerdown", function (e) {
     var h = root();
     if (!h || !e.target.closest) return;
-    var inside = e.target.closest(".history, .tcgam-ui-chat, .tcgam-ui-emoji, .tcgam-ui-panel, .tcgam-ui-fab");
+    // The site's emoji picker is an <emoji-picker> web component in a Bootstrap .popover, rendered
+    // outside .history; its search/scroll live in a shadow DOM so taps retarget to the host. Count it
+    // (and any popover) as inside, or interacting with it closes the reactions drawer it belongs to.
+    var inside = e.target.closest(".history, .tcgam-ui-chat, .tcgam-ui-emoji, .tcgam-ui-panel, .tcgam-ui-fab, .popover, emoji-picker");
     if (inside) return;
     if (h.classList.contains("tcgam-chat-peek")) { h.classList.remove("tcgam-chat-peek"); renderPanel(); }
     if (h.classList.contains("tcgam-emoji-open")) h.classList.remove("tcgam-emoji-open");

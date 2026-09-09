@@ -23,6 +23,8 @@ html.tcgam.tcgam-noZoom .game .offcanvas,
 html.tcgam.tcgam-noZoom .game .dropdown-menu,
 html.tcgam.tcgam-noZoom .game .deck-list-panel,
 html.tcgam.tcgam-noZoom .game .fullscreen-modal,
+html.tcgam.tcgam-noZoom .game .popover,
+html.tcgam.tcgam-noZoom .game emoji-picker,
 html.tcgam.tcgam-noZoom .game input,
 html.tcgam.tcgam-noZoom .game textarea {
   touch-action: pan-y;
