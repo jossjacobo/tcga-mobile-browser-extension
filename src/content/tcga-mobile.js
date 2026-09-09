@@ -100,8 +100,16 @@
     requestFullscreen().catch(function () {});
   }
   document.addEventListener("pointerup", onFirstTap, true);
+  function lockLandscape() {
+    // The Screen Orientation API only permits locking while the document is fullscreen (which we are).
+    // The lock is released automatically on exit; ignore rejections (unsupported, or not fullscreen yet).
+    var o = screen.orientation;
+    if (!o || !o.lock) return;
+    try { var r = o.lock("landscape"); if (r && r.catch) r.catch(function () {}); } catch (e) {}
+  }
   function onFullscreenChange() {
     if (!isFullscreen()) fsArmed = false;
+    else if (current.enabled && current.lockLandscape) lockLandscape();
     applyFullscreenScale();
     renderPanel();
   }

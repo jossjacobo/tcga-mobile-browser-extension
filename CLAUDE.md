@@ -92,7 +92,7 @@ like a small desktop and the browser scales it down. Firefox for Android ignores
 element is fullscreen and snaps back to device width, so in fullscreen the script instead scales the root
 `font-size` by `deviceWidth / virtualWidth` (`html.tcgam-fsscale`, `--tcgam-fsScale`). Root `zoom` was
 tried and rejected: Firefox scales viewport units under zoom. Fullscreen needs a user gesture; the first
-`pointerup` inside `.game` requests it (`autoFullscreen`), and there is a Fullscreen button too.
+`pointerup` inside `.game` requests it (`autoFullscreen`), and there is a Fullscreen button too. While fullscreen, `screen.orientation.lock("landscape")` keeps the device in landscape (the API only works in fullscreen; the lock auto-releases on exit).
 
 ### Keyboard, chat and other overlays
 

@@ -16,6 +16,7 @@
     { key: "compactLobby", type: "bool",  default: true,  label: "Simplify lobby (keep only the Connect tabs)" },
     { key: "noZoom",       type: "bool",  default: true,  label: "Block zoom and browser panning" },
     { key: "autoFullscreen", type: "bool", default: true, label: "Fullscreen on first tap (hides browser bar)" },
+    { key: "lockLandscape",  type: "bool", default: true, label: "Lock to landscape while fullscreen" },
     { key: "quickMenu",    type: "bool",  default: true,  label: "Show floating menu button" },
     // Lays the page out at a desktop-like width and lets the browser scale it down, so rem-based text
     // and Bootstrap spacing shrink to match the vh-based board. 0 = use the real device width.

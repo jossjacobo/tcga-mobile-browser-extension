@@ -90,6 +90,11 @@ child of `.history` in the site's DOM, so the "reactions" button keeps `.history
 floats just the `.emoji-row` at the bottom of the screen; if the site's own quick-emoji toggle is off it is
 clicked once so the row exists.
 
+**Lock to landscape.** While fullscreen the extension calls `screen.orientation.lock("landscape")` so the
+device stays in landscape even if physically rotated (toggle: "Lock to landscape while fullscreen"). The
+Orientation API only permits locking in fullscreen, so this rides on the fullscreen state; the lock releases
+automatically on exit.
+
 **Fullscreen.** The browser's own toolbar can only be hidden through the Fullscreen API, which needs a user
 gesture, so the first tap inside a game requests it (toggle: "Fullscreen on first tap"). Works on Firefox for
 Android. On iPhone the Fullscreen API for page elements only exists since Safari 17.2 (iOS 17.2); older
