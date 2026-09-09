@@ -1,0 +1,618 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3BD757CE30508BC300927B4C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD757CD30508BC300927B4C /* AppDelegate.swift */; };
+		3BD757D230508BC300927B4C /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 3BD757D030508BC300927B4C /* Main.html */; };
+		3BD757D430508BC300927B4C /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3BD757D330508BC300927B4C /* Icon.png */; };
+		3BD757D630508BC300927B4C /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = 3BD757D530508BC300927B4C /* Style.css */; };
+		3BD757D830508BC300927B4C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD757D730508BC300927B4C /* SceneDelegate.swift */; };
+		3BD757DA30508BC300927B4C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD757D930508BC300927B4C /* ViewController.swift */; };
+		3BD757DD30508BC300927B4C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3BD757DB30508BC300927B4C /* LaunchScreen.storyboard */; };
+		3BD757E030508BC300927B4C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3BD757DE30508BC300927B4C /* Main.storyboard */; };
+		3BD757E830508BC500927B4C /* TCGA Mobile Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3BD757E730508BC500927B4C /* TCGA Mobile Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		3BD757ED30508BC500927B4C /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD757EC30508BC500927B4C /* SafariWebExtensionHandler.swift */; };
+		3BD757EF30508BC500927B4C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3BD757E130508BC400927B4C /* Assets.xcassets */; };
+		3BD757FF30508BC500927B4C /* popup in Resources */ = {isa = PBXBuildFile; fileRef = 3BD757FA30508BC500927B4C /* popup */; };
+		3BD7580030508BC500927B4C /* content in Resources */ = {isa = PBXBuildFile; fileRef = 3BD757FB30508BC500927B4C /* content */; };
+		3BD7580130508BC500927B4C /* shared in Resources */ = {isa = PBXBuildFile; fileRef = 3BD757FC30508BC500927B4C /* shared */; };
+		3BD7580230508BC500927B4C /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 3BD757FD30508BC500927B4C /* icons */; };
+		3BD7580330508BC500927B4C /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 3BD757FE30508BC500927B4C /* manifest.json */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3BD757E930508BC500927B4C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3BD757C230508BC300927B4C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3BD757E630508BC500927B4C;
+			remoteInfo = "TCGA Mobile Extension";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3BD757F530508BC500927B4C /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				3BD757E830508BC500927B4C /* TCGA Mobile Extension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		3BD757CA30508BC300927B4C /* TCGA Mobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TCGA Mobile.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BD757CD30508BC300927B4C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		3BD757D130508BC300927B4C /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/Main.html; sourceTree = "<group>"; };
+		3BD757D330508BC300927B4C /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		3BD757D530508BC300927B4C /* Style.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = Style.css; sourceTree = "<group>"; };
+		3BD757D730508BC300927B4C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		3BD757D930508BC300927B4C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		3BD757DC30508BC300927B4C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		3BD757DF30508BC300927B4C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		3BD757E130508BC400927B4C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3BD757E230508BC400927B4C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3BD757E730508BC500927B4C /* TCGA Mobile Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "TCGA Mobile Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BD757EC30508BC500927B4C /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
+		3BD757EE30508BC500927B4C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3BD757FA30508BC500927B4C /* popup */ = {isa = PBXFileReference; lastKnownFileType = folder; name = popup; path = ../../../dist/safari/popup; sourceTree = "<group>"; };
+		3BD757FB30508BC500927B4C /* content */ = {isa = PBXFileReference; lastKnownFileType = folder; name = content; path = ../../../dist/safari/content; sourceTree = "<group>"; };
+		3BD757FC30508BC500927B4C /* shared */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shared; path = ../../../dist/safari/shared; sourceTree = "<group>"; };
+		3BD757FD30508BC500927B4C /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = ../../../dist/safari/icons; sourceTree = "<group>"; };
+		3BD757FE30508BC500927B4C /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = manifest.json; path = ../../../dist/safari/manifest.json; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3BD757C730508BC300927B4C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3BD757E430508BC500927B4C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3BD757C130508BC300927B4C = {
+			isa = PBXGroup;
+			children = (
+				3BD757CC30508BC300927B4C /* TCGA Mobile */,
+				3BD757EB30508BC500927B4C /* TCGA Mobile Extension */,
+				3BD757CB30508BC300927B4C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3BD757CB30508BC300927B4C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3BD757CA30508BC300927B4C /* TCGA Mobile.app */,
+				3BD757E730508BC500927B4C /* TCGA Mobile Extension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3BD757CC30508BC300927B4C /* TCGA Mobile */ = {
+			isa = PBXGroup;
+			children = (
+				3BD757CD30508BC300927B4C /* AppDelegate.swift */,
+				3BD757D730508BC300927B4C /* SceneDelegate.swift */,
+				3BD757D930508BC300927B4C /* ViewController.swift */,
+				3BD757DB30508BC300927B4C /* LaunchScreen.storyboard */,
+				3BD757DE30508BC300927B4C /* Main.storyboard */,
+				3BD757E130508BC400927B4C /* Assets.xcassets */,
+				3BD757E230508BC400927B4C /* Info.plist */,
+				3BD757CF30508BC300927B4C /* Resources */,
+			);
+			path = "TCGA Mobile";
+			sourceTree = "<group>";
+		};
+		3BD757CF30508BC300927B4C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				3BD757D030508BC300927B4C /* Main.html */,
+				3BD757D330508BC300927B4C /* Icon.png */,
+				3BD757D530508BC300927B4C /* Style.css */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		3BD757EB30508BC500927B4C /* TCGA Mobile Extension */ = {
+			isa = PBXGroup;
+			children = (
+				3BD757F930508BC500927B4C /* Resources */,
+				3BD757EC30508BC500927B4C /* SafariWebExtensionHandler.swift */,
+				3BD757EE30508BC500927B4C /* Info.plist */,
+			);
+			path = "TCGA Mobile Extension";
+			sourceTree = "<group>";
+		};
+		3BD757F930508BC500927B4C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				3BD757FA30508BC500927B4C /* popup */,
+				3BD757FB30508BC500927B4C /* content */,
+				3BD757FC30508BC500927B4C /* shared */,
+				3BD757FD30508BC500927B4C /* icons */,
+				3BD757FE30508BC500927B4C /* manifest.json */,
+			);
+			name = Resources;
+			path = "TCGA Mobile Extension";
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3BD757C930508BC300927B4C /* TCGA Mobile */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3BD757F630508BC500927B4C /* Build configuration list for PBXNativeTarget "TCGA Mobile" */;
+			buildPhases = (
+				3BD757C630508BC300927B4C /* Sources */,
+				3BD757C730508BC300927B4C /* Frameworks */,
+				3BD757C830508BC300927B4C /* Resources */,
+				3BD757F530508BC500927B4C /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3BD757EA30508BC500927B4C /* PBXTargetDependency */,
+			);
+			name = "TCGA Mobile";
+			packageProductDependencies = (
+			);
+			productName = "TCGA Mobile";
+			productReference = 3BD757CA30508BC300927B4C /* TCGA Mobile.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3BD757E630508BC500927B4C /* TCGA Mobile Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3BD757F230508BC500927B4C /* Build configuration list for PBXNativeTarget "TCGA Mobile Extension" */;
+			buildPhases = (
+				3BD757E330508BC500927B4C /* Sources */,
+				3BD757E430508BC500927B4C /* Frameworks */,
+				3BD757E530508BC500927B4C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "TCGA Mobile Extension";
+			packageProductDependencies = (
+			);
+			productName = "TCGA Mobile Extension";
+			productReference = 3BD757E730508BC500927B4C /* TCGA Mobile Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3BD757C230508BC300927B4C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2660;
+				LastUpgradeCheck = 2660;
+				TargetAttributes = {
+					3BD757C930508BC300927B4C = {
+						CreatedOnToolsVersion = 26.6;
+					};
+					3BD757E630508BC500927B4C = {
+						CreatedOnToolsVersion = 26.6;
+					};
+				};
+			};
+			buildConfigurationList = 3BD757C530508BC300927B4C /* Build configuration list for PBXProject "TCGA Mobile" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3BD757C130508BC300927B4C;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 3BD757CB30508BC300927B4C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3BD757C930508BC300927B4C /* TCGA Mobile */,
+				3BD757E630508BC500927B4C /* TCGA Mobile Extension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3BD757C830508BC300927B4C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3BD757D430508BC300927B4C /* Icon.png in Resources */,
+				3BD757E030508BC300927B4C /* Main.storyboard in Resources */,
+				3BD757DD30508BC300927B4C /* LaunchScreen.storyboard in Resources */,
+				3BD757D230508BC300927B4C /* Main.html in Resources */,
+				3BD757EF30508BC500927B4C /* Assets.xcassets in Resources */,
+				3BD757D630508BC300927B4C /* Style.css in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3BD757E530508BC500927B4C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3BD7580030508BC500927B4C /* content in Resources */,
+				3BD7580230508BC500927B4C /* icons in Resources */,
+				3BD7580330508BC500927B4C /* manifest.json in Resources */,
+				3BD7580130508BC500927B4C /* shared in Resources */,
+				3BD757FF30508BC500927B4C /* popup in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3BD757C630508BC300927B4C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3BD757DA30508BC300927B4C /* ViewController.swift in Sources */,
+				3BD757CE30508BC300927B4C /* AppDelegate.swift in Sources */,
+				3BD757D830508BC300927B4C /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3BD757E330508BC500927B4C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3BD757ED30508BC500927B4C /* SafariWebExtensionHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3BD757EA30508BC500927B4C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3BD757E630508BC500927B4C /* TCGA Mobile Extension */;
+			targetProxy = 3BD757E930508BC500927B4C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		3BD757D030508BC300927B4C /* Main.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3BD757D130508BC300927B4C /* Base */,
+			);
+			name = Main.html;
+			sourceTree = "<group>";
+		};
+		3BD757DB30508BC300927B4C /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3BD757DC30508BC300927B4C /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		3BD757DE30508BC300927B4C /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3BD757DF30508BC300927B4C /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3BD757F030508BC500927B4C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		3BD757F130508BC500927B4C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		3BD757F330508BC500927B4C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "TCGA Mobile Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "TCGA Mobile Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jossjacobo.tcgamobile.Extension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3BD757F430508BC500927B4C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "TCGA Mobile Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "TCGA Mobile Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jossjacobo.tcgamobile.Extension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3BD757F730508BC500927B4C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "TCGA Mobile/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "TCGA Mobile";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jossjacobo.TCGA-Mobile";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3BD757F830508BC500927B4C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "TCGA Mobile/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "TCGA Mobile";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jossjacobo.TCGA-Mobile";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3BD757C530508BC300927B4C /* Build configuration list for PBXProject "TCGA Mobile" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3BD757F030508BC500927B4C /* Debug */,
+				3BD757F130508BC500927B4C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3BD757F230508BC500927B4C /* Build configuration list for PBXNativeTarget "TCGA Mobile Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3BD757F330508BC500927B4C /* Debug */,
+				3BD757F430508BC500927B4C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3BD757F630508BC500927B4C /* Build configuration list for PBXNativeTarget "TCGA Mobile" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3BD757F730508BC500927B4C /* Debug */,
+				3BD757F830508BC500927B4C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3BD757C230508BC300927B4C /* Project object */;
+}

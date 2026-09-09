@@ -1,0 +1,876 @@
+/* TCGA Mobile — injected on tcg-arena.fr. Everything is gated on html.tcgam so the
+ * extension can be switched off without a reload. Selectors target TCG Arena's own
+ * (stable, human-readable) class names: .game, .history, .navbar, .left-bar, .chatbox... */
+
+/* ---------- Touch behaviour ---------- */
+html.tcgam.tcgam-noZoom,
+html.tcgam.tcgam-noZoom body {
+  touch-action: manipulation;          /* kills double-tap-to-zoom, keeps drag/scroll */
+  overscroll-behavior: none;           /* no pull-to-refresh / rubber-banding on Firefox Android */
+  -webkit-text-size-adjust: 100%;
+}
+/* On the board the browser must not claim gestures as pan/zoom, or card drags get a pointercancel */
+html.tcgam.tcgam-noZoom .game {
+  touch-action: none;
+}
+html.tcgam.tcgam-noZoom .game .left-bar,
+html.tcgam.tcgam-noZoom .game .history .content,
+html.tcgam.tcgam-noZoom .game .overflow-y-scroll,
+html.tcgam.tcgam-noZoom .game .overflow-auto,
+html.tcgam.tcgam-noZoom .game .overflow-y-auto,
+html.tcgam.tcgam-noZoom .game .modal,
+html.tcgam.tcgam-noZoom .game .offcanvas,
+html.tcgam.tcgam-noZoom .game .dropdown-menu,
+html.tcgam.tcgam-noZoom .game .deck-list-panel,
+html.tcgam.tcgam-noZoom .game .fullscreen-modal,
+html.tcgam.tcgam-noZoom .game input,
+html.tcgam.tcgam-noZoom .game textarea {
+  touch-action: pan-y;
+}
+html.tcgam body:has(.game) {
+  overflow: hidden;
+  position: fixed;                     /* iOS Safari: stop the page scrolling behind the board */
+  inset: 0;
+  width: 100%;
+}
+/* The site's .App-header is min-height:100vh and centers its content; on mobile 100vh includes the
+ * browser toolbar area, so the board got centered in a taller box: dark band on top, clipped bottom. */
+html.tcgam body:has(.game) .App,
+html.tcgam body:has(.game) .App-header {
+  height: 100dvh !important;
+  min-height: 0 !important;
+  max-height: 100dvh !important;
+}
+
+/* Fullscreen: fill the whole screen, no letterboxing background */
+html.tcgam:fullscreen, html.tcgam:fullscreen body { background: #18293d; }
+/* Fullscreen substitute for the virtual screen width (set by the content script) */
+html.tcgam.tcgam-fsscale { font-size: calc(100% * var(--tcgam-fsScale, 1)); }
+
+/* ---------- Board height ----------
+ * (Card size is NOT adjustable from CSS: the site gives every card inline width/height computed from its
+ * zone's configured height x innerHeight/100 and lays positions out from those. Only the deck/discard
+ * placeholders and .hand-board-section read --card-height, so overriding it just misaligns them.) */
+html.tcgam .game {
+  /* 100vh on mobile Safari includes the space behind the toolbars; dvh tracks the visible area */
+  height: 100dvh !important;
+}
+/* The site reserves a 40px bottom gutter in its own mobile mode; in a browser (or fullscreen) that is dead space */
+html.tcgam body.mobile .game {
+  --gutter-height: 0px;
+  margin-bottom: 0 !important;
+  max-height: 100dvh !important;
+}
+
+/* ---------- Board width: reclaim the right-hand column ----------
+ * The site reserves 32vh on the right (inline padding on the board container) for the chat panel and
+ * the stack column. Chat is an overlay here and stack cards peek in from the edge (below), so keep
+ * only a 10vh strip. The stack card positions are stored by the site's JS, so they are moved with a
+ * CSS translate that composes with the site's transform instead of fighting it. */
+html.tcgam .game > div:has(> .player-boards),
+html.tcgam .game [style*="padding-right: 32vh"] {
+  padding-right: 14.5vh !important;
+}
+html.tcgam .game .opp-container.layout-1vAll div:has(> .layout-board-section-wrapper) {
+  width: calc(100vw - 14.5vh - 5rem) !important;
+}
+html.tcgam.tcgam-sideDrawer .game .opp-container.layout-1vAll div:has(> .layout-board-section-wrapper) {
+  width: calc(100vw - 14.5vh - 2rem) !important;   /* the left bar no longer takes room */
+}
+/* the playmat is widened by the same 32vh in the site CSS; keep it on screen */
+html.tcgam .game .opp-container .player-section:last-child .playmat {
+  width: calc(100% + 14.5vh - var(--playmat-border) * 2) !important;
+}
+html.tcgam.tcgam-sideDrawer .game .waiting-room [style*="padding-left"] {
+  padding-left: 1rem !important;
+}
+html.tcgam body.mobile .layout-1vAll .hand-board-section {
+  width: 50vw !important;
+  left: calc(50% - 25vw) !important;
+}
+html.tcgam .game-card.Stack:not(.dragged) {
+  translate: 50% 0;                    /* the left half of a stack card peeks in */
+}
+html.tcgam.tcgam-stack-open .game-card.Stack:not(.dragged) {
+  translate: 0 0;
+}
+/* Raise the open pile above the board's right-hand zones while keeping the site's order: the top card
+ * (reversed-index-0) first, then each card behind it one step lower. A single shared z-index would
+ * leave the paint order to DOM order and show the wrong card on top. */
+html.tcgam.tcgam-stack-open .game-card.Stack.reversed-index-0:not(.dragged) { z-index: 1200 !important; }
+html.tcgam.tcgam-stack-open .game-card.Stack.reversed-index-1:not(.dragged) { z-index: 1199 !important; }
+html.tcgam.tcgam-stack-open .game-card.Stack.reversed-index-2:not(.dragged) { z-index: 1198 !important; }
+html.tcgam.tcgam-stack-open .game-card.Stack.reversed-index-3:not(.dragged) { z-index: 1197 !important; }
+html.tcgam.tcgam-stack-open .game-card.Stack.reversed-index-4:not(.dragged) { z-index: 1196 !important; }
+html.tcgam.tcgam-stack-open .game-card.Stack.reversed-index-5:not(.dragged) { z-index: 1195 !important; }
+/* The zone's own action row ("Resolve"...) is a sibling of the fixed .stack zone, anchored to a wrapper
+ * that now ends past the screen edge (we narrowed the right column), so it was mostly off-screen and
+ * did not follow the cards. Pin it under the fixed zone and slide it out and in with the cards. */
+html.tcgam .stack-wrapper .buttons {
+  position: fixed !important;
+  right: 1vh !important;               /* same anchor as .stack */
+  left: auto !important;
+  bottom: auto !important;
+  top: calc(50% + 21vh) !important;    /* .stack spans 50% - 20vh to 50% + 20vh */
+  width: 28.64vh !important;
+  padding: 0 2vh !important;
+  transition: translate .18s, opacity .18s !important;
+  z-index: 1201;
+}
+html.tcgam .stack-wrapper .buttons {
+  translate: 0 0 !important;           /* site: translate -50% -50% */
+}
+html.tcgam:not(.tcgam-stack-open) .stack-wrapper .buttons {
+  translate: 50% 0 !important;
+  opacity: 0;
+  pointer-events: none !important;
+}
+html.tcgam .stack-wrapper .buttons button {
+  height: 6vh !important;
+  font-size: 2.6vh !important;
+  padding: 0 1vh !important;
+}
+/* While peeking, collapse the site's fan-out of the cards behind the top one and hide the bits that
+ * poke out past the card edge (link button, counters), so only a clean card edge shows on the board */
+html.tcgam:not(.tcgam-stack-open) .game-card.Stack:not(.dragged) .card-images-and-wrapper {
+  translate: 0 0 !important;
+  rotate: 0deg !important;             /* the fan also tilts the cards behind; square them up too */
+  transition: translate .18s, rotate .18s;
+}
+html.tcgam:not(.tcgam-stack-open) .game-card.Stack:not(.dragged) .link-button,
+html.tcgam:not(.tcgam-stack-open) .game-card.Stack:not(.dragged) .card-counters,
+html.tcgam:not(.tcgam-stack-open) .game-card.Stack:not(.dragged) .token-count,
+html.tcgam:not(.tcgam-stack-open) .game-card.Stack:not(.dragged) .quick-actions {
+  visibility: hidden !important;
+}
+
+/* ---------- Card counters: no hover on touch, so keep the +/- arrows visible and tappable ----------
+ * Site: .number-controls is opacity:0 until :hover, and in its own mobile mode it disables pointer
+ * events on counters entirely (editing is meant to happen in the card's long-press menu). */
+html.tcgam .game .card-counters .counter {
+  --counter-height: 3.8vh;             /* the site's own default size */
+  --counter-width: 5.2vh;
+}
+html.tcgam .game .game-card.medium-card .card-counters .counter {
+  scale: .8;
+}
+html.tcgam .game .card-counters .number-controls {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  /* taller than the counter itself so each arrow is a usable tap target */
+  width: 3.6vh !important;
+  height: 140% !important;
+  top: -20% !important;
+  right: calc(var(--bs-border-radius) - 3.6vh) !important;
+  background: var(--bs-body-bg);
+  border-radius: var(--bs-border-radius);
+  box-shadow: 0 0 1vh rgba(0, 0, 0, .5);
+}
+html.tcgam .game .card-counters .number-controls button {
+  height: 50% !important;
+}
+html.tcgam .game .card-counters .counter.primary .number-controls {
+  background: var(--main-color);
+}
+html.tcgam .game .card-counters .number-controls button {
+  font-size: 1.9vh !important;
+  line-height: 1;
+  color: #fff;
+}
+html.tcgam .game .card-counters .number-controls button:first-child { border-bottom: 1px solid rgba(255,255,255,.15); }
+html.tcgam body.mobile .game .card-counters .counter,
+html.tcgam body.mobile .game .card-counters .counter .number-controls,
+html.tcgam body.mobile .game .card-counters .counter .number-controls button {
+  pointer-events: all !important;
+}
+/* the number field itself stays inert: tapping it would only raise the keyboard */
+html.tcgam .game .card-counters .counter input {
+  pointer-events: none !important;
+}
+html.tcgam .game .game-card:has(.card-counters) {
+  z-index: 900;                        /* arrows extend past the card edge; keep them above neighbours */
+}
+
+/* ---------- Player notes ----------
+ * Site: the notes icon lives in .top-buttons (display:none until the counters block is hovered) and the
+ * text panel is only rendered while the icon is hovered. The icon is replaced by a fixed button in the
+ * left column (.tcgam-ui-notes); the site's panel still opens at the player block. */
+html.tcgam .game .player-counters-wrapper:has(.notes.tcgam-notes-open) .top-buttons {
+  display: flex !important;
+  pointer-events: all !important;
+}
+html.tcgam .game .player-counters-wrapper .notes.tcgam-notes-open > img {
+  display: none !important;
+}
+html.tcgam .game .player-counters-wrapper .notes.tcgam-notes-open {
+  background-color: transparent !important;
+}
+html.tcgam .game .player-counters-wrapper .notes.tcgam-notes-open .notes-content {
+  scale: 1 !important;
+  pointer-events: auto !important;
+  width: 34vh !important;
+  z-index: 100001;
+}
+html.tcgam .game .player-counters-wrapper .notes.tcgam-notes-open .notes-content .blur,
+html.tcgam .game .player-counters-wrapper .notes.tcgam-notes-open .notes-content .background {
+  display: block !important;
+}
+html.tcgam .game .player-counters-wrapper .notes.tcgam-notes-open textarea {
+  font-size: 2.8vh !important;
+  min-height: 16vh;
+}
+/* lift the whole counters block above the board layers while the panel is open. The outermost stacking
+ * context is the fixed .player-counter-position-wrapper (z 200); the deck/rune hover labels live in
+ * .sections-hover (z 1000), so that wrapper is what must be raised. */
+html.tcgam .game .player-counter-position-wrapper:has(.notes.tcgam-notes-open),
+html.tcgam .game .player-counters-wrapper:has(.notes.tcgam-notes-open),
+html.tcgam .game .player-counters-wrapper:has(.notes.tcgam-notes-open) .top-buttons,
+html.tcgam .game .player-counters-wrapper .notes.tcgam-notes-open {
+  z-index: 100001 !important;
+}
+/* keyboard up: the panel would be under it. position:fixed cannot escape the transformed counters block,
+ * so the content script translates the panel into the visible strip (see placeNotesForKeyboard). */
+html.tcgam.tcgam-keyboard .game .player-counters-wrapper .notes.tcgam-notes-open .notes-content {
+  width: 60vw !important;
+  transition: none !important;
+}
+html.tcgam.tcgam-keyboard .game .player-counters-wrapper .notes.tcgam-notes-open .notes-content textarea {
+  height: 100% !important;
+  min-height: 0 !important;
+}
+/* the fixed notes button: left column, under End turn (15–23vh) */
+html.tcgam:has(.player-boards) .tcgam-ui-key.tcgam-ui-notes { left: calc(1vh + env(safe-area-inset-left)); top: 24.5vh; }
+html.tcgam:has(.player-boards) .tcgam-ui-key.tcgam-ui-notes img { width: 60%; height: 60%; }
+html.tcgam:has(.player-boards) .tcgam-ui-key.tcgam-ui-notes.tcgam-ui-held { background: #e94560; border-color: #e94560; }
+
+/* ---------- Player block: scheduled-pause diamonds and life total ----------
+ * Site: the diamonds grow from 2.2vh to 3vh and shift up while the block is hovered. On touch the hover
+ * starts with the tap, so the target moves under the finger and the tap lands on the life-total input
+ * below (keyboard flashes). Use the large layout permanently and keep the input inert. */
+html.tcgam .game .player-counters-wrapper .player-info,
+html.tcgam .game .player-counters-wrapper:hover .player-info {
+  --diamond-size: 3.4vh;
+}
+html.tcgam .game .player-counters-wrapper .player-info .scheduled-pauses,
+html.tcgam .game .player-counters-wrapper:hover .player-info .scheduled-pauses {
+  padding: 0 3vh !important;
+  translate: 0 -60% !important;
+  z-index: 1000;
+}
+html.tcgam .game .player-counters-wrapper .player-info .scheduled-pauses .wrapper {
+  padding: .8vh !important;
+  height: calc(var(--diamond-size) + 1.6vh) !important;
+  margin: -0.8vh;
+}
+html.tcgam .game .player-counters-wrapper .player-info .scheduled-pauses,
+html.tcgam .game .player-counters-wrapper .player-info .scheduled-pauses * {
+  transition: none !important;
+}
+html.tcgam .game .player-counters-wrapper:hover .player-info .pseudo {
+  opacity: 1;
+}
+html.tcgam .game .player-counters .number-control .number-controls {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+html.tcgam .game .player-counters .number-control input {
+  pointer-events: none !important;
+}
+
+/* Custom resource counters (Energy / Power...): same treatment as the card counters */
+html.tcgam .game .custom-section .number-control {
+  --font-size: 2.6vh;
+  margin-right: 5.5vh !important;      /* room for the arrows before the next label */
+}
+html.tcgam .game .custom-section .number-control .form-control {
+  height: 4.2vh !important;
+  min-width: 5vh;
+}
+html.tcgam .game .player-section .custom-section {
+  translate: 0 1.2vh;                  /* a touch lower, away from the rune cards above */
+}
+html.tcgam .game .custom-section .number-control .number-controls {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  width: 3.6vh !important;
+  height: 100% !important;             /* no taller than the value box: the cards sit right above */
+  top: 0 !important;
+  right: calc(var(--bs-border-radius) - 3.6vh) !important;
+  background: var(--bs-body-bg);
+  border-radius: var(--bs-border-radius);
+  box-shadow: 0 0 1vh rgba(0, 0, 0, .5);
+}
+html.tcgam .game .custom-section .number-control .number-controls button {
+  height: 50% !important;
+  font-size: 1.9vh !important;
+  line-height: 1;
+  color: #fff;
+}
+html.tcgam .game .custom-section .number-control .number-controls button:first-child { border-bottom: 1px solid rgba(255,255,255,.15); }
+html.tcgam .game .custom-section .number-control input {
+  pointer-events: none !important;
+}
+
+/* ---------- Chat / game log ---------- */
+html.tcgam.tcgam-hideChat:not(.tcgam-chat-peek) .game .history {
+  display: none !important;
+}
+/* Peek mode: chat floats over the board, larger and readable, until toggled off */
+html.tcgam.tcgam-chat-peek .game .history {
+  display: block !important;
+  position: fixed !important;
+  /* Sized to the *visual* viewport so the input stays above the on-screen keyboard */
+  /* Firefox Android reports a visualViewport.offsetTop while the keyboard is up but does not render that
+   * offset for fixed elements, so anchor to the top and only use the visual viewport *height*. */
+  top: 1.5vh !important;               /* Bootstrap's end-0 / bottom-0 are !important */
+  right: calc(10vh + env(safe-area-inset-right)) !important;
+  bottom: auto !important;
+  left: auto !important;
+  width: min(62vw, 900px) !important;
+  height: calc(var(--tcgam-vvh, 100dvh) - 3vh - 10vh - env(safe-area-inset-bottom)) !important;
+  margin: 0 !important;
+  border-radius: 1.5vh;
+  z-index: 100001 !important;
+  box-shadow: 0 0 3vh rgba(0, 0, 0, .7);
+}
+/* Keyboard up: use the whole visible strip, corner buttons are behind the keyboard anyway */
+html.tcgam.tcgam-chat-peek.tcgam-keyboard .game .history {
+  left: 3vw !important;
+  right: 3vw !important;
+  width: auto !important;
+  /* visualViewport.height runs a little past the keyboard's suggestion strip on Android; keep a margin */
+  height: calc(var(--tcgam-vvh, 100dvh) - 8vh) !important;
+}
+html.tcgam.tcgam-chat-peek .game .history .background,
+html.tcgam.tcgam-chat-peek .game .history .blur {
+  border-radius: 1.5vh;
+}
+html.tcgam.tcgam-chat-peek .game .history .background {
+  opacity: .97;
+}
+/* Log: vh-based type so it is the same physical size in every layout mode */
+html.tcgam.tcgam-chat-peek .game .history .content {
+  height: calc(100% - 10vh) !important;
+  padding: 1vh 2vh 0 !important;
+  scrollbar-gutter: auto !important;
+  font-size: 2.9vh !important;
+}
+/* system lines ("deck is legal", turn markers...) carry their own small rem sizes */
+html.tcgam.tcgam-chat-peek .game .history .content *:not(.sender):not(.chat-bubble) {
+  font-size: inherit !important;
+}
+html.tcgam.tcgam-chat-peek .game .history .content > div {
+  padding: 0 !important;
+}
+html.tcgam.tcgam-chat-peek .game .history .content p,
+html.tcgam.tcgam-chat-peek .game .history .content li {
+  font-size: 2.9vh !important;
+  line-height: 1.3 !important;
+  margin-top: 0 !important;
+}
+html.tcgam.tcgam-chat-peek .game .history .content ul {
+  padding-left: 3vh !important;
+}
+html.tcgam.tcgam-chat-peek .game .history .content .sender {
+  font-size: 2.1vh !important;
+  height: auto !important;
+  margin-top: 1.5vh !important;
+}
+html.tcgam.tcgam-chat-peek .game .history .content .chat-bubble {
+  font-size: 3vh !important;
+  padding: .6vh 1.5vh !important;
+  border-radius: 1.2vh !important;
+}
+html.tcgam.tcgam-chat-peek .game .history .scrollbar-background {
+  display: none !important;
+}
+html.tcgam.tcgam-chat-peek .game .history .chat-fade-mask {
+  bottom: 10vh !important;
+}
+/* Input row: finger-sized field and send button; the site's emoji toggle is replaced by our drawer */
+html.tcgam.tcgam-chat-peek .game .history .chatbox-wrapper {
+  height: 8.5vh !important;
+  bottom: .75vh !important;
+  left: 1vh !important;
+  width: calc(100% - 2vh) !important;
+  gap: 1vh;
+}
+html.tcgam.tcgam-chat-peek .game .history .chatbox-wrapper > button:first-child {
+  display: none !important;
+}
+html.tcgam.tcgam-chat-peek .game .history .chatbox {
+  height: 7.5vh !important;
+  font-size: 3.2vh !important;
+  padding: 0 2vh !important;
+  border-radius: 1.2vh !important;
+}
+html.tcgam.tcgam-chat-peek .game .history .chatbox-wrapper > button {
+  height: 7.5vh !important;
+  min-width: 9vh !important;
+  padding: 0 !important;
+  border-radius: 1.2vh !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+html.tcgam.tcgam-chat-peek .game .history .chatbox-wrapper > button img {
+  height: 3.5vh !important;
+  width: 3.5vh !important;
+}
+/* Corner buttons are useless behind the keyboard; hide them so they don't peek through */
+html.tcgam.tcgam-keyboard .tcgam-ui-chat,
+html.tcgam.tcgam-keyboard .tcgam-ui-emoji,
+html.tcgam.tcgam-keyboard .tcgam-ui-fab,
+html.tcgam.tcgam-keyboard .tcgam-ui-handle {
+  display: none !important;
+}
+/* The emoji row lives inside .history (absolutely positioned below it); it gets its own drawer instead */
+html.tcgam .game .history .emoji-row {
+  display: none !important;
+}
+html.tcgam.tcgam-hideChat.tcgam-emoji-open:not(.tcgam-chat-peek) .game .history {
+  display: block !important;           /* must out-rank the hideChat rule above */
+}
+/* When only the reactions are wanted, keep .history rendered but invisible and float the row */
+html.tcgam.tcgam-emoji-open:not(.tcgam-chat-peek) .game .history > :not(.emoji-row) {
+  visibility: hidden;
+}
+html.tcgam.tcgam-emoji-open:not(.tcgam-chat-peek) .game .history {
+  pointer-events: none;
+  box-shadow: none;
+}
+html.tcgam.tcgam-emoji-open .game .history .emoji-row {
+  display: flex !important;
+  visibility: visible;
+  pointer-events: auto;
+  position: fixed !important;
+  left: 50% !important;
+  bottom: calc(1.5vh + env(safe-area-inset-bottom)) !important;
+  top: auto !important;
+  translate: -50% 0;
+  width: min(80vw, 760px) !important;
+  height: 11vh !important;
+  padding: 1vh !important;
+  gap: 1vh !important;
+  border-radius: 2vh;
+  background: rgba(24, 41, 61, .95) !important;
+  box-shadow: 0 0 3vh rgba(0, 0, 0, .7);
+  z-index: 100002;
+}
+html.tcgam.tcgam-emoji-open .game .history .emoji-row button {
+  font-size: 4.5vh !important;
+  height: 9vh !important;
+  width: auto !important;
+  flex: 1 1 0;
+  aspect-ratio: auto !important;
+}
+html.tcgam .game .history .chatbox {
+  font-size: 16px;                     /* <16px makes iOS Safari zoom the page on focus */
+}
+
+/* ---------- Top navigation bar (only while a game is on screen) ---------- */
+html.tcgam.tcgam-hideNavbar body:has(.game) .navbar {
+  display: none !important;
+}
+
+/* ---------- Compact side bar and section buttons ---------- */
+html.tcgam.tcgam-compactBars .game .left-bar {
+  width: 3rem;                         /* site default is 4rem */
+}
+html.tcgam.tcgam-compactBars .game .left-bar button {
+  height: 4vh;                         /* site default is 4.8vh */
+  padding-left: .25rem;
+  padding-right: .25rem;
+}
+html.tcgam.tcgam-compactBars .game .left-bar .turn-count {
+  width: 2.6rem;
+  font-size: .75rem;
+}
+html.tcgam.tcgam-compactBars .game .left-bar .game-timers-container .game-timer {
+  font-size: .7rem !important;
+}
+html.tcgam.tcgam-compactBars .game .section-buttons .select-all,
+html.tcgam.tcgam-compactBars .game .section-buttons .dropdown-toggle {
+  scale: .7;                           /* the desktop default (.4) is un-tappable on a phone */
+}
+html.tcgam.tcgam-compactBars .game .new-turn-message {
+  width: 22vh;
+  font-size: .8rem;
+}
+
+/* ---------- Lobby: drop the "1. Learn / 2. Connect / 3. Play" chevrons, keep the Connect tabs ---------- */
+html.tcgam.tcgam-compactLobby .game .box-container.step.step-1,
+html.tcgam.tcgam-compactLobby .game .box-container.step.step-3,
+html.tcgam.tcgam-compactLobby .game .box-container.step.step-2 .title {
+  display: none !important;
+}
+html.tcgam.tcgam-compactLobby .game .box-container.step.step-2 {
+  width: min(100%, 60rem) !important;   /* site: w-50 inside a 3-column chevron row */
+  clip-path: none !important;
+  padding: 0 1rem !important;
+  border-radius: var(--bs-border-radius);
+}
+/* Lobby vertical split: the site gives the steps row and the waiting room 50% each and centers the
+ * box, so a tall tab (Public lobbies) overflows off the top. Give the Connect box all the space the
+ * compact waiting room leaves and let its content scroll instead. */
+html.tcgam.tcgam-compactLobby .game .h-50:has(> div > .step-2) {
+  height: auto !important;
+  flex: 1 1 0%;                        /* basis 0 so tall tab content shrinks instead of pushing the room off-screen */
+  min-height: 0;
+  align-items: stretch !important;
+  padding: .5rem 0;
+}
+html.tcgam.tcgam-compactLobby .game .h-50:has(> div > .step-2) > div {
+  height: 100%;
+  align-items: stretch !important;
+}
+html.tcgam.tcgam-compactLobby .game .box-container.step.step-2 {
+  height: 100% !important;
+  max-height: 100% !important;
+}
+html.tcgam.tcgam-compactLobby .game .box-container.step.step-2 > div {
+  height: 100% !important;
+  min-height: 0;
+  overflow-y: auto !important;
+  padding: .4rem 0 !important;
+}
+html.tcgam.tcgam-compactLobby .game .connect-panel .tab-content,
+html.tcgam.tcgam-compactLobby .game .connect-panel .tab-pane {
+  padding-top: .4rem !important;
+  padding-bottom: .4rem !important;
+}
+html.tcgam.tcgam-compactLobby .game .connect-panel .form-control,
+html.tcgam.tcgam-compactLobby .game .connect-panel .btn:not(.nav-link) {
+  padding-top: .25rem !important;
+  padding-bottom: .25rem !important;
+}
+html.tcgam.tcgam-compactLobby .game .connect-panel p,
+html.tcgam.tcgam-compactLobby .game .connect-panel label {
+  margin-bottom: .15rem !important;
+}
+
+/* Waiting room: compact player slots, no 32vh gutter for the (hidden) chat */
+html.tcgam.tcgam-compactLobby .game .waiting-room {
+  height: auto !important;
+  flex: 0 0 auto;
+  padding: .25rem 2vh .75rem !important;
+  gap: .4rem !important;
+}
+html.tcgam.tcgam-compactLobby .game .waiting-room h5 {
+  font-size: .85rem;
+  margin: 0;
+  opacity: .8;
+}
+html.tcgam.tcgam-compactLobby .game .waiting-room .room-player,
+html.tcgam.tcgam-compactLobby .game .waiting-room .d-flex.gap-3 > div:has(> .room-player),
+html.tcgam.tcgam-compactLobby .game .waiting-room .d-flex.gap-3 > div {
+  padding: .3rem .6rem !important;
+  min-height: 0 !important;
+  height: 2.8rem !important;
+  width: auto !important;
+  min-width: 6.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: .8;
+}
+html.tcgam.tcgam-compactLobby .game .waiting-room .room-player.empty {
+  opacity: .5;
+}
+/* the occupied slot's name card is a fixed 45px in the site CSS */
+html.tcgam.tcgam-compactLobby .game .waiting-room .room-player .box-container {
+  height: auto !important;
+  padding: 2px 4px !important;
+  gap: .25rem;
+}
+html.tcgam.tcgam-compactLobby .game .waiting-room .room-player .box-container img {
+  height: 1.4rem !important;
+  width: 1.4rem !important;
+  max-width: 1.4rem !important;
+}
+html.tcgam.tcgam-compactLobby .game .waiting-room .room-player .plus {
+  font-size: 1.3rem !important;
+}
+html.tcgam.tcgam-compactLobby .game .waiting-room .d-flex.gap-3 {
+  gap: .5rem !important;
+}
+html.tcgam.tcgam-compactLobby .game .waiting-room form {
+  padding: .2rem .5rem !important;
+}
+html.tcgam.tcgam-compactLobby .game .waiting-room form .form-control {
+  padding: .1rem .4rem !important;
+  width: 3.5rem !important;
+}
+
+/* ---------- Shortcut keys (top-right, left of the menu button) ---------- */
+.tcgam-ui-key { display: none; }
+html.tcgam:has(.player-boards) .tcgam-ui-key {
+  display: flex;
+  position: fixed;
+  top: 1.5vh;
+  width: 8vh;
+  height: 8vh;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 1.5vh;
+  border: 1px solid rgba(255, 255, 255, .25);
+  background: rgba(24, 41, 61, .85);
+  color: #fff;
+  font: 700 3.6vh/1 system-ui, -apple-system, sans-serif;
+  z-index: 2147483000;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+}
+html.tcgam:has(.player-boards) .tcgam-ui-key:active,
+html.tcgam:has(.player-boards) .tcgam-ui-key.tcgam-ui-held { background: #e94560; border-color: #e94560; }
+/* Right column: menu (1.5–9.5vh), ⌫, T */
+html.tcgam:has(.player-boards) .tcgam-ui-key-t,
+html.tcgam:has(.player-boards) .tcgam-ui-key-back { right: calc(1vh + env(safe-area-inset-right)); }
+html.tcgam:has(.player-boards) .tcgam-ui-key-back { top: 11vh; }
+/* Left column: drawer handle (1.5–13.5vh), end turn, notes, fullscreen. They slide with the drawer. */
+html.tcgam:has(.player-boards) .tcgam-ui-key-end { left: calc(1vh + env(safe-area-inset-left)); top: 15vh; }
+html.tcgam:has(.player-boards) .tcgam-ui-key-fs  { left: calc(1vh + env(safe-area-inset-left)); top: 34vh; }
+html.tcgam:has(.player-boards) .tcgam-ui-key-end,
+html.tcgam:has(.player-boards) .tcgam-ui-key-fs,
+html.tcgam:has(.player-boards) .tcgam-ui-key.tcgam-ui-notes { transition: left .18s ease-out; }
+html.tcgam.tcgam-drawer-open:has(.player-boards) .tcgam-ui-key-end,
+html.tcgam.tcgam-drawer-open:has(.player-boards) .tcgam-ui-key-fs,
+html.tcgam.tcgam-drawer-open:has(.player-boards) .tcgam-ui-key.tcgam-ui-notes {
+  left: calc(16vh + env(safe-area-inset-left));   /* drawer is 15vh wide */
+}
+.tcgam-ui-key svg { width: 62%; height: 62%; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+html.tcgam:has(.player-boards) .tcgam-ui-key-t    { top: 20.5vh; }
+html.tcgam.tcgam-keyboard .tcgam-ui-key { display: none !important; }
+
+/* ---------- Chat toggle (bottom-right) ---------- */
+.tcgam-ui-chat { display: none; }
+html.tcgam.tcgam-hideChat:has(.game) .tcgam-ui-chat {
+  display: flex;
+  position: fixed;
+  right: calc(1vh + env(safe-area-inset-right));
+  bottom: calc(1vh + env(safe-area-inset-bottom));
+  width: 8vh;
+  height: 8vh;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .25);
+  background: rgba(24, 41, 61, .85);
+  color: #fff;
+  z-index: 2147483000;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+}
+html.tcgam.tcgam-chat-peek .tcgam-ui-chat,
+html.tcgam.tcgam-emoji-open .tcgam-ui-emoji {
+  background: #e94560;
+  border-color: #e94560;
+}
+.tcgam-ui-emoji { display: none; }
+html.tcgam.tcgam-hideChat:has(.game) .tcgam-ui-emoji {
+  display: flex;
+  position: fixed;
+  right: calc(1vh + env(safe-area-inset-right));            /* stacked above the chat button */
+  bottom: calc(10.5vh + env(safe-area-inset-bottom));
+  width: 8vh;
+  height: 8vh;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .25);
+  background: rgba(24, 41, 61, .85);
+  color: #fff;
+  z-index: 2147483000;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+}
+.tcgam-ui-emoji svg { width: 55%; height: 55%; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; }
+.tcgam-ui-chat svg { width: 55%; height: 55%; fill: none; stroke: #fff; stroke-width: 2; stroke-linejoin: round; }
+
+/* ---------- Side drawer ----------
+ * Sizes are in vh on purpose: the CSS px size differs between the virtual-width layout and fullscreen,
+ * but 1vh is the same physical height in both, so tap targets stay finger-sized. */
+html.tcgam.tcgam-sideDrawer .game .left-bar {
+  position: absolute !important;
+  left: 0;
+  top: 0;
+  height: 100% !important;
+  width: 15vh !important;
+  z-index: 100000;
+  transform: translateX(-100%);
+  transition: transform .18s ease-out;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: var(--bs-body-bg-secondary);
+  padding-left: env(safe-area-inset-left);
+}
+html.tcgam.tcgam-sideDrawer.tcgam-drawer-open .game .left-bar {
+  transform: none;
+  box-shadow: 0 0 3vh rgba(0, 0, 0, .7);
+}
+html.tcgam.tcgam-sideDrawer .game .left-bar > div {
+  justify-content: flex-start !important;
+  gap: 1vh;
+}
+html.tcgam.tcgam-sideDrawer .game .left-bar .pt-4 {
+  padding-top: 1.5vh !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1vh;
+}
+html.tcgam.tcgam-sideDrawer .game .left-bar .turn-count {
+  position: static !important;         /* site: absolute top-0, overlapping the timers */
+  margin: 0 !important;
+}
+html.tcgam.tcgam-sideDrawer .game .left-bar hr {
+  margin: 1vh auto !important;
+  width: 70%;
+}
+html.tcgam.tcgam-sideDrawer .game .left-bar button {
+  height: 10vh !important;
+  min-height: 10vh;
+  margin: .6vh 0 !important;
+  padding: 1.5vh !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.5vh !important;
+}
+html.tcgam.tcgam-sideDrawer .game .left-bar button img,
+html.tcgam.tcgam-sideDrawer .game .left-bar button svg {
+  height: 6vh !important;
+  width: 6vh !important;
+  max-width: none !important;
+}
+html.tcgam.tcgam-sideDrawer .game .left-bar .turn-count {
+  left: 0 !important;
+  width: 100% !important;
+  font-size: 2.6vh !important;
+  text-align: center;
+}
+html.tcgam.tcgam-sideDrawer .game .left-bar .game-timers-container .game-timer {
+  font-size: 2.6vh !important;
+}
+html.tcgam.tcgam-sideDrawer .game .left-bar .game-timers-container .game-timer.total-time {
+  font-size: 2.2vh !important;
+}
+
+/* Handle on the left edge; sits at the drawer's edge when open */
+.tcgam-ui-handle { display: none; }
+html.tcgam.tcgam-sideDrawer:has(.game) .tcgam-ui-handle {
+  display: flex;
+  position: fixed;
+  left: env(safe-area-inset-left, 0px);
+  top: 1.5vh;                          /* top-left: the site's own token palette lives at left-middle */
+  width: 6vh;
+  height: 12vh;
+  gap: .4vh;
+  color: #fff;
+  font: 2.4vh/1.1 system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, .25);
+  border-left: 0;
+  border-radius: 0 2vh 2vh 0;
+  background: rgba(24, 41, 61, .85);
+  z-index: 2147482999;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  transition: left .18s ease-out;
+  cursor: pointer;
+}
+html.tcgam.tcgam-sideDrawer.tcgam-drawer-open:has(.game) .tcgam-ui-handle {
+  left: calc(15vh + env(safe-area-inset-left, 0px));
+}
+/* With turn info the handle becomes a small badge: chevron on the right, turn + timer stacked */
+html.tcgam.tcgam-sideDrawer:has(.game) .tcgam-ui-handle.tcgam-ui-hasinfo {
+  width: auto;
+  min-width: 14vh;
+  padding: 0 1.5vh 0 1vh;
+  flex-direction: row;
+  gap: 1vh;
+}
+.tcgam-ui-handle .tcgam-ui-turn, .tcgam-ui-handle .tcgam-ui-time { display: none; }
+.tcgam-ui-handle.tcgam-ui-hasinfo .tcgam-ui-turn,
+.tcgam-ui-handle.tcgam-ui-hasinfo .tcgam-ui-time { display: block; }
+.tcgam-ui-handle.tcgam-ui-hasinfo .tcgam-ui-time { font-weight: 400; opacity: .85; font-variant-numeric: tabular-nums; }
+.tcgam-ui-handle.tcgam-ui-hasinfo .tcgam-ui-chev { order: 3; margin-left: .5vh; }
+.tcgam-ui-handle .tcgam-ui-chev {
+  width: 1.6vh;
+  height: 1.6vh;
+  border-top: .4vh solid #fff;
+  border-right: .4vh solid #fff;
+  rotate: 45deg;
+  translate: -.3vh 0;
+  transition: rotate .18s;
+}
+html.tcgam-drawer-open .tcgam-ui-handle .tcgam-ui-chev {
+  rotate: -135deg;
+  translate: .3vh 0;
+}
+
+/* Respect the notch / home indicator */
+html.tcgam .game {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  box-sizing: border-box;
+}
+
+/* ---------- Floating quick-menu button + panel ---------- */
+.tcgam-ui-fab,
+.tcgam-ui-panel { display: none; }
+
+html.tcgam.tcgam-quickMenu:has(.game) .tcgam-ui-fab {
+  display: flex;
+  position: fixed;
+  right: calc(1vh + env(safe-area-inset-right));
+  top: 1.5vh;
+  width: 8vh;
+  height: 8vh;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .25);
+  background: rgba(24, 41, 61, .85);
+  color: #fff;
+  font-size: 4vh;
+  line-height: 1;
+  z-index: 2147483000;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  padding: 0;
+}
+html.tcgam:has(.game) .tcgam-ui-panel.tcgam-ui-open {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  position: fixed;
+  right: calc(10.5vh + env(safe-area-inset-right));   /* left of the button column */
+  top: 1.5vh;
+  width: min(85vw, 300px);
+  max-height: calc(100dvh - 3vh - env(safe-area-inset-bottom));
+  overflow-y: auto;
+  padding: .5rem .6rem;
+  border-radius: .6rem;
+  border: 1px solid rgba(255, 255, 255, .15);
+  background: rgba(26, 26, 34, .96);
+  color: #fff;
+  font: 12px/1.25 system-ui, -apple-system, sans-serif;
+  z-index: 2147483001;
+  box-shadow: 0 .5rem 2rem rgba(0, 0, 0, .5);
+}
+.tcgam-ui-panel-title { font-weight: 700; margin-bottom: .25rem; }
+.tcgam-ui-row { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; margin: 0; }
+.tcgam-ui-row input[type="checkbox"] { width: 1rem; height: 1rem; margin: 0; }
+.tcgam-ui-row input[type="range"] { width: 100%; }
+

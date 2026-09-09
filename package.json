@@ -1,0 +1,20 @@
+{
+  "name": "tcga-mobile",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Mobile-friendly UI tweaks for TCG Arena (tcg-arena.fr) as a Safari (iOS) and Firefox (Android) extension.",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:firefox": "node scripts/build.mjs firefox",
+    "build:safari": "node scripts/build.mjs safari",
+    "lint:firefox": "npm run build:firefox && web-ext lint --source-dir dist/firefox",
+    "run:firefox": "npm run build:firefox && web-ext run --source-dir dist/firefox --url https://www.tcg-arena.fr/play",
+    "run:android": "npm run build:firefox && web-ext run --source-dir dist/firefox --target firefox-android --firefox-apk org.mozilla.firefox --adb-device \"$ADB_DEVICE\"",
+    "package:firefox": "npm run build:firefox && web-ext build --source-dir dist/firefox --artifacts-dir web-ext-artifacts --overwrite-dest",
+    "safari:convert": "npm run build:safari && xcrun safari-web-extension-converter dist/safari --project-location safari --app-name \"TCGA Mobile\" --bundle-identifier com.jossjacobo.tcgamobile --ios-only --no-open --force"
+  },
+  "devDependencies": {
+    "web-ext": "^8.3.0"
+  }
+}

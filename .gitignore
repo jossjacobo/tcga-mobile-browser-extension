@@ -1,0 +1,10 @@
+node_modules/
+dist/
+safari/build/
+safari/**/xcuserdata/
+safari/**/*.xcuserstate
+*.zip
+*.xpi
+.DS_Store
+web-ext-artifacts/
+.idea/

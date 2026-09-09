@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "TCGA Mobile",
+  "version": "0.0.0",
+  "description": "Mobile-friendly UI tweaks for TCG Arena: hide chat and other panels so the board fits a phone screen.",
+  "icons": {
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png",
+    "128": "icons/icon-128.png",
+    "256": "icons/icon-256.png",
+    "512": "icons/icon-512.png"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "*://*.tcg-arena.fr/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.tcg-arena.fr/*"
+      ],
+      "css": [
+        "content/tcga-mobile.css"
+      ],
+      "js": [
+        "shared/settings.js",
+        "content/tcga-mobile.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "action": {
+    "default_title": "TCGA Mobile",
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "48": "icons/icon-48.png",
+      "96": "icons/icon-96.png"
+    }
+  }
+}
