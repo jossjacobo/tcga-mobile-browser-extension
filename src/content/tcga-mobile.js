@@ -43,16 +43,19 @@
   function applyFullscreenScale() {
     var html = root();
     if (!html) return;
-    if (isFullscreen() && current.enabled && current.layoutWidth > 0) {
-      var z = Math.min(1, window.innerWidth / current.layoutWidth);
-      html.style.setProperty("--tcgam-fsScale", String(z));
+    // The viewport meta is ignored in fullscreen and in Firefox's "Desktop site" mode; in both the layout
+    // width is whatever the browser chose. Scale the root font so rem-based UI matches the virtual width.
+    var honored = Math.abs(window.innerWidth - current.layoutWidth) <= 4;
+    if (current.enabled && current.layoutWidth > 0 && !honored) {
+      var z = window.innerWidth / current.layoutWidth;    // < 1 on a phone in fullscreen, > 1 in desktop mode
+      html.style.setProperty("--tcgam-fsScale", z.toFixed(4));
       html.classList.add("tcgam-fsscale");
     } else {
       html.classList.remove("tcgam-fsscale");
       html.style.removeProperty("--tcgam-fsScale");
     }
   }
-  window.addEventListener("resize", function () { if (isFullscreen()) applyFullscreenScale(); });
+  window.addEventListener("resize", applyFullscreenScale);
 
   /* --- Viewport: cover the notch and stop iOS Safari zooming on input focus --- */
   function fixViewport() {
@@ -132,6 +135,7 @@
   var handle;
   function setDrawer(open) {
     root().classList.toggle("tcgam-drawer-open", !!open);
+    var lb = document.querySelector(".left-bar"); if (lb) lb.scrollLeft = 0;   // never show it scrolled sideways
     if (handle) handle.setAttribute("aria-expanded", open ? "true" : "false");
   }
   function ensureHandle() {

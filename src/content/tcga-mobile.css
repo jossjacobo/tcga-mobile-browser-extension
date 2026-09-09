@@ -239,7 +239,7 @@ html.tcgam.tcgam-keyboard .game .player-counters-wrapper .notes.tcgam-notes-open
   min-height: 0 !important;
 }
 /* the fixed notes button: left column, under End turn (15–23vh) */
-html.tcgam:has(.player-boards) .tcgam-ui-key.tcgam-ui-notes { left: calc(1vh + env(safe-area-inset-left)); top: 24.5vh; }
+html.tcgam:has(.player-boards) .tcgam-ui-key.tcgam-ui-notes { left: calc(1vh + env(safe-area-inset-left)); top: 34vh; }
 html.tcgam:has(.player-boards) .tcgam-ui-key.tcgam-ui-notes img { width: 60%; height: 60%; }
 html.tcgam:has(.player-boards) .tcgam-ui-key.tcgam-ui-notes.tcgam-ui-held { background: #e94560; border-color: #e94560; }
 
@@ -604,7 +604,8 @@ html.tcgam.tcgam-compactLobby .game .waiting-room form .form-control {
 
 /* ---------- Shortcut keys (top-right, left of the menu button) ---------- */
 .tcgam-ui-key { display: none; }
-html.tcgam:has(.player-boards) .tcgam-ui-key {
+html.tcgam:has(.player-boards) .tcgam-ui-key,
+html.tcgam:has(.game) .tcgam-ui-key-fs {
   display: flex;
   position: fixed;
   top: 1.5vh;
@@ -629,14 +630,14 @@ html.tcgam:has(.player-boards) .tcgam-ui-key.tcgam-ui-held { background: #e94560
 html.tcgam:has(.player-boards) .tcgam-ui-key-t,
 html.tcgam:has(.player-boards) .tcgam-ui-key-back { right: calc(1vh + env(safe-area-inset-right)); }
 html.tcgam:has(.player-boards) .tcgam-ui-key-back { top: 11vh; }
-/* Left column: drawer handle (1.5–13.5vh), end turn, notes, fullscreen. They slide with the drawer. */
-html.tcgam:has(.player-boards) .tcgam-ui-key-end { left: calc(1vh + env(safe-area-inset-left)); top: 15vh; }
-html.tcgam:has(.player-boards) .tcgam-ui-key-fs  { left: calc(1vh + env(safe-area-inset-left)); top: 34vh; }
+/* Left column: drawer handle (1.5–13.5vh), fullscreen (lobby too), end turn, notes. They slide with the drawer. */
+html.tcgam:has(.player-boards) .tcgam-ui-key-end { left: calc(1vh + env(safe-area-inset-left)); top: 24.5vh; }
+html.tcgam:has(.game) .tcgam-ui-key-fs  { left: calc(1vh + env(safe-area-inset-left)); top: 15vh; }
 html.tcgam:has(.player-boards) .tcgam-ui-key-end,
-html.tcgam:has(.player-boards) .tcgam-ui-key-fs,
+html.tcgam:has(.game) .tcgam-ui-key-fs,
 html.tcgam:has(.player-boards) .tcgam-ui-key.tcgam-ui-notes { transition: left .18s ease-out; }
 html.tcgam.tcgam-drawer-open:has(.player-boards) .tcgam-ui-key-end,
-html.tcgam.tcgam-drawer-open:has(.player-boards) .tcgam-ui-key-fs,
+html.tcgam.tcgam-drawer-open:has(.game) .tcgam-ui-key-fs,
 html.tcgam.tcgam-drawer-open:has(.player-boards) .tcgam-ui-key.tcgam-ui-notes {
   left: calc(16vh + env(safe-area-inset-left));   /* drawer is 15vh wide */
 }
@@ -706,7 +707,7 @@ html.tcgam.tcgam-sideDrawer .game .left-bar {
   transform: translateX(-100%);
   transition: transform .18s ease-out;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: clip;                    /* not just hidden: a drifting vertical swipe could scroll it sideways */
   background-color: var(--bs-body-bg-secondary);
   padding-left: env(safe-area-inset-left);
 }
@@ -728,6 +729,10 @@ html.tcgam.tcgam-sideDrawer .game .left-bar .pt-4 {
 html.tcgam.tcgam-sideDrawer .game .left-bar .turn-count {
   position: static !important;         /* site: absolute top-0, overlapping the timers */
   margin: 0 !important;
+}
+/* hover tooltips are 100vw wide and useless on touch; they also made the drawer horizontally scrollable */
+html.tcgam.tcgam-sideDrawer .game .left-bar .tooltip-overlay .overlay {
+  display: none !important;
 }
 html.tcgam.tcgam-sideDrawer .game .left-bar hr {
   margin: 1vh auto !important;
