@@ -46,7 +46,8 @@
     // The viewport meta is ignored in fullscreen and in Firefox's "Desktop site" mode; in both the layout
     // width is whatever the browser chose. Scale the root font so rem-based UI matches the virtual width.
     var honored = Math.abs(window.innerWidth - current.layoutWidth) <= 4;
-    if (current.enabled && current.layoutWidth > 0 && !honored) {
+    var inGame = !!document.querySelector(".game");   // don't scale the site's home/portrait screens
+    if (current.enabled && current.layoutWidth > 0 && !honored && inGame) {
       var z = window.innerWidth / current.layoutWidth;    // < 1 on a phone in fullscreen, > 1 in desktop mode
       html.style.setProperty("--tcgam-fsScale", z.toFixed(4));
       html.classList.add("tcgam-fsscale");
@@ -109,6 +110,7 @@
   /* Re-arm auto-fullscreen only when a new game screen appears, so leaving fullscreen on purpose sticks. */
   new MutationObserver(function () {
     if (!document.querySelector(".game")) fsArmed = true;
+    applyFullscreenScale();            // .game can mount/unmount on rotation; keep scaling in sync
   }).observe(root(), { childList: true, subtree: true });
 
   /* --- Visual viewport: the on-screen keyboard shrinks it while 100dvh stays put. Expose its size so
